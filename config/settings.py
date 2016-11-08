@@ -2,10 +2,10 @@
 
 from __future__ import unicode_literals
 """
-Django settings for django_template_project.
+Django settings for callnumber_project.
 
-Environmental variables triggered in project's env_min_djng/bin/activate, when using runserver,
-  or env_min_djng/bin/activate_this.py, when using apache via passenger.
+Environmental variables triggered in project's env_cllnmbr/bin/activate, when using runserver,
+  or env_cllnmbr/bin/activate_this.py, when using apache via passenger.
 """
 
 import json, logging, os
@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'app_x',
+    'callnumber_app',
 ]
 
 MIDDLEWARE = [
@@ -147,7 +147,7 @@ LOGGING = {
         },
     },
     'loggers': {
-        'app_x': {
+        'callnumber_app': {
             'handlers': ['logfile'],
             'level': os.environ.get(u'DJANGO_TEMPLATE__LOG_LEVEL'),
         },
