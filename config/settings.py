@@ -53,7 +53,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'config.urls'
 
-TEMPLATES = json.loads( os.environ['CLLNMBR__TEMPLATES'] )  # list of dict(s)
+TEMPLATES = json.loads( os.environ['CLLNMBR__TEMPLATES_JSON'] )  # list of dict(s)
 
 WSGI_APPLICATION = 'config.passenger_wsgi.application'
 
