@@ -18,4 +18,5 @@ def hi( request ):
 
 
 def assign_subject( request ):
-    return HttpResponse( 'coming' )
+    url = reverse('admin:callnumber_app_subject_changelist' )
+    return HttpResponseRedirect( url )
