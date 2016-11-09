@@ -15,3 +15,7 @@ def hi( request ):
     """ Returns simplest response. """
     now = datetime.datetime.now()
     return HttpResponse( '<p>hi</p> <p>( %s )</p>' % now )
+
+
+def assign_subject( request ):
+    return HttpResponse( 'coming' )

@@ -10,6 +10,8 @@ urlpatterns = [
 
     url( r'^info/$', views.hi, name='info_url' ),
 
+    url( r'^v1/', views.assign_subject, name='assign_url' ),
+
     url( r'^$',  RedirectView.as_view(pattern_name='callnumber:info_url') ),
 
     ]
