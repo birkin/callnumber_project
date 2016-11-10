@@ -20,3 +20,8 @@ def hi( request ):
 def assign_subject( request ):
     url = reverse('admin:callnumber_app_subject_changelist' )
     return HttpResponseRedirect( url )
+
+
+def login( request ):
+    log.debug( 'starting login()' )
+    return HttpResponse( 'login coming' )
