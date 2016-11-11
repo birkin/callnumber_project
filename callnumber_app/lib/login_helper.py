@@ -32,6 +32,7 @@ class UserGrabber(object):
         """ Grabs generic authenticated user.
             Called by get_user() """
         user = authenticate( username=settings_app.LEGIT_USER, password=settings_app.LEGIT_USER_PASSWORD )
+        log.debug( 'user authenticated' )
         return user
 
 
@@ -47,6 +48,7 @@ class ShibChecker( object ):
                 return_val = True
             elif self.check_eppn( shib_dct['eppn'] ):
                 return_val = True
+        log.debug( 'return_val, `{}`'.format(return_val) )
         return return_val
 
     def grab_shib_info( self, meta_dct ):

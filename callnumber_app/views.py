@@ -29,6 +29,7 @@ def login( request ):
     log.debug( 'starting login()' )
     user = user_grabber.get_user( request.META )
     if user:
+        log.debug( 'logging in user' )
         django_login(request, user )
     url = reverse('admin:callnumber_app_subject_changelist' )
     return HttpResponseRedirect( url )
