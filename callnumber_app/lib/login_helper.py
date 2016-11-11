@@ -3,18 +3,21 @@
 from __future__ import unicode_literals
 import logging
 from callnumber_app import settings_app
-from callnumber_app.lib.shib import ShibChecker
+# from callnumber_app.lib.shib import ShibChecker
 from django.conf import settings
 from django.contrib.auth import authenticate
 
 
 log = logging.getLogger(__name__)
-shib_checker = ShibChecker()
+# shib_checker = ShibChecker()
 
 
 class UserGrabber(object):
 
     def get_user( self, meta_dct ):
+        """ Returns user object.
+            Called by views.login() """
+        shib_checker = ShibChecker()
         if shib_checker.validate_user( meta_dct ):
             log.debug( 'validated via shib' )
             user = self.grab_good_user()
@@ -29,3 +32,13 @@ class UserGrabber(object):
     def grab_good_user( self ):
         user = authenticate( username=settings_app.LEGIT_USER, password=settings_app.LEGIT_USER_PASSWORD )
         return user
+
+
+
+class ShibChecker( object ):
+
+    def __init__( self ):
+        pass
+
+    def validate_user( self, meta_dct ):
+        return False
