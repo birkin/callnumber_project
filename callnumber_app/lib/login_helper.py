@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
-import logging
+import logging, pprint
 from callnumber_app import settings_app
 # from callnumber_app.lib.shib import ShibChecker
 from django.conf import settings
@@ -9,7 +9,6 @@ from django.contrib.auth import authenticate
 
 
 log = logging.getLogger(__name__)
-# shib_checker = ShibChecker()
 
 
 class UserGrabber(object):
@@ -30,15 +29,74 @@ class UserGrabber(object):
         return user
 
     def grab_good_user( self ):
+        """ Grabs generic authenticated user.
+            Called by get_user() """
         user = authenticate( username=settings_app.LEGIT_USER, password=settings_app.LEGIT_USER_PASSWORD )
         return user
 
 
-
 class ShibChecker( object ):
 
-    def __init__( self ):
-        pass
-
     def validate_user( self, meta_dct ):
-        return False
+        """ Checks shib info.
+            Called by UserGrabber.get_user() """
+        return_val = False
+        shib_dct = self.grab_shib_info( meta_dct )
+        if shib_dct:
+            if self.check_group( shib_dct['member_of'] ):
+                return_val = True
+            elif self.check_eppn( shib_dct['eppn'] ):
+                return_val = True
+        return return_val
+
+    def grab_shib_info( self, meta_dct ):
+        """ Grabs shib values from http-header.
+            Called by: validate_user() """
+        shib_dct = None
+        if 'Shibboleth-eppn' in meta_dct:
+            shib_dct = self.grab_shib_from_meta( meta_dct )
+        log.debug( 'shib_dct, ```{}```'.format(pprint.pformat(shib_dct)) )
+        return shib_dct
+
+    def check_group( self, user_memberships ):
+        """ Checks user's grouper groups.
+            Called by validate_user() """
+        return_val = False
+        for group in settings_app.LEGIT_GROUPER_GROUPS:
+            if group in user_memberships:
+                return_val = True
+                break
+        return return_val
+
+    def check_eppn( self, eppn ):
+        """ Checks user's eppn.
+            Called by validate_user() """
+        return_val = False
+        if eppn in settings_app.LEGIT_EPPNS:
+            return_val = True
+        return return_val
+
+    def grab_shib_from_meta( self, meta_dct ):
+        """ Extracts shib values from http-header.
+            Called by grab_shib_info() """
+        shib_dct = {
+            # 'brown_status': meta_dct.get( 'Shibboleth-brownStatus', '' ),  # eg. 'active'
+            # 'brown_type': meta_dct.get( 'Shibboleth-brownType', '' ),  # eg. 'Staff'
+            # 'department': meta_dct.get( 'Shibboleth-department', '' ),
+            # 'edu_person_primary_affiliation': meta_dct.get( 'Shibboleth-eduPersonPrimaryAffiliation', '' ),  # eg. 'staff'
+            # 'email': meta_dct.get( 'Shibboleth-mail', '' ).lower(),
+            'eppn': meta_dct.get( 'Shibboleth-eppn', '' ),
+            # 'id_net': meta_dct.get( 'Shibboleth-brownNetId', '' ),
+            # 'id_short': meta_dct.get( 'Shibboleth-brownShortId', '' ),
+            'member_of': sorted( meta_dct.get('Shibboleth-isMemberOf', '').split(';') ),  # only dct element that's not a unicode string
+            # 'name_first': meta_dct.get( 'Shibboleth-givenName', '' ),
+            # 'name_last': meta_dct.get( 'Shibboleth-sn', '' ),
+            # 'patron_barcode': meta_dct.get( 'Shibboleth-brownBarCode', '' ),
+            # 'phone': meta_dct.get( 'Shibboleth-phone', 'unavailable' ),  # valid?
+            # 'title': meta_dct.get( 'Shibboleth-title', '' ),
+            }
+        return shib_dct
+
+
+
+
