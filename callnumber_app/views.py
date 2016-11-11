@@ -33,5 +33,4 @@ def login( request ):
         django_login(request, user )
     url = reverse('admin:callnumber_app_subject_changelist' )
     log.debug( 'redirect url to admin, ```{}```'.format(url) )
-    ## add shib logout
-    return HttpResponseRedirect( url )
+    return HttpResponseRedirect( url )  ## TODO: add shib logout (via redirecting to shib-logout url, then redirecting to the above admin url)
