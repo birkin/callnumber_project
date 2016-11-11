@@ -10,7 +10,7 @@ urlpatterns = [
 
     url( r'^info/$', views.hi, name='info_url' ),
 
-    url( r'^v1/', views.assign_subject, name='assign_url' ),
+    url( r'^v1/', views.data, name='data_url' ),
 
     url( r'^login/', views.login, name='login_url' ),
 
