@@ -18,7 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['CLLNMBR__SECRET_KEY']
+SECRET_KEY = unicode( os.environ['CLLNMBR__SECRET_KEY'] )
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = json.loads( os.environ['CLLNMBR__DEBUG_JSON'] )  # will be True or False
@@ -100,12 +100,12 @@ USE_TZ = True  # was False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-STATIC_URL = os.environ['CLLNMBR__STATIC_URL']
-STATIC_ROOT = os.environ['CLLNMBR__STATIC_ROOT']  # needed for collectstatic command
+STATIC_URL = unicode( os.environ['CLLNMBR__STATIC_URL'] )
+STATIC_ROOT = unicode( os.environ['CLLNMBR__STATIC_ROOT'] )  # needed for collectstatic command
 
 
 # Email
-EMAIL_HOST = os.environ['CLLNMBR__EMAIL_HOST']
+EMAIL_HOST = unicode( os.environ['CLLNMBR__EMAIL_HOST'] )
 EMAIL_PORT = int( os.environ['CLLNMBR__EMAIL_PORT'] )
 
 
@@ -137,7 +137,7 @@ LOGGING = {
         'logfile': {
             'level':'DEBUG',
             'class':'logging.FileHandler',  # note: configure server to use system's log-rotate to avoid permissions issues
-            'filename': os.environ.get(u'CLLNMBR__LOG_PATH'),
+            'filename': unicode( os.environ.get('CLLNMBR__LOG_PATH') ),
             'formatter': 'standard',
         },
         'console':{
@@ -149,7 +149,7 @@ LOGGING = {
     'loggers': {
         'callnumber_app': {
             'handlers': ['logfile'],
-            'level': os.environ.get(u'CLLNMBR__LOG_LEVEL'),
+            'level': unicode( os.environ.get('CLLNMBR__LOG_LEVEL') ),
         },
     }
 }
