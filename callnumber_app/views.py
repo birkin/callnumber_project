@@ -37,10 +37,14 @@ def login( request ):
 
 def data( request ):
     """ Handles all /v1/ urls. """
+    service_response = {}
     if request.GET.get( 'data', '' ) == 'dump':
         return_values = dump_param_handler.grab_all()
         service_response = {'data': 'dump'}
 
+    elif 'callnumber' in request.GET:
+        call_param_handler = views_helper.CallParamHandler()
+        return_values = call_param_handler.grab_callnumbers( request.GET['callnumber'].split() )
     service_response['result'] = {}
     service_response['result']['items'] = return_values
     service_response['result']['service_documentation'] = 'coming soon'
