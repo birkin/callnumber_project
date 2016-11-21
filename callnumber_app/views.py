@@ -34,6 +34,25 @@ def login( request ):
     return HttpResponseRedirect( url )  ## TODO: add shib logout (via redirecting to shib-logout url, then redirecting to the above admin url)
 
 
+# def data_v2( request ):
+#     """ Handles all /v2/ urls. """
+#     if request.GET.get( 'data', '' ) == 'dump':
+#         dump_param_handler = views_helper.DumpParamHandler()
+#         resp = dump_param_handler.resp_template
+#         return_values = dump_param_handler.grab_all_v2()
+#     elif 'callnumber' in request.GET:
+#         call_param_handler = views_helper.CallParamHandler()
+#         resp = call_param_handler.resp_template
+#         callnumbers = request.GET['callnumber'].split(',')
+#         callnumbers.sort()
+#         resp['response']['perceived_callnumbers'] = callnumbers
+#         return_values = call_param_handler.grab_callnumbers( callnumbers )
+#     resp['response']['items'] = return_values
+#     resp['response']['timestamp'] = unicode( datetime.datetime.now() )
+#     output = json.dumps( resp, sort_keys=True, indent=2 )
+#     return HttpResponse( output, content_type='application/json')
+
+
 def data_v2( request ):
     """ Handles all /v2/ urls. """
     if request.GET.get( 'data', '' ) == 'dump':
@@ -41,12 +60,9 @@ def data_v2( request ):
         resp = dump_param_handler.resp_template
         return_values = dump_param_handler.grab_all_v2()
     elif 'callnumber' in request.GET:
-        call_param_handler = views_helper.CallParamHandler()
+        call_param_handler = views_helper.CallParamHandler( request.GET['callnumber'].split(',') )
         resp = call_param_handler.resp_template
-        callnumbers = request.GET['callnumber'].split(',')
-        callnumbers.sort()
-        resp['response']['perceived_callnumbers'] = callnumbers
-        return_values = call_param_handler.grab_callnumbers( callnumbers )
+        return_values = call_param_handler.grab_callnumbers()
     resp['response']['items'] = return_values
     resp['response']['timestamp'] = unicode( datetime.datetime.now() )
     output = json.dumps( resp, sort_keys=True, indent=2 )
