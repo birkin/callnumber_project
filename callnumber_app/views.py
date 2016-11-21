@@ -55,8 +55,9 @@ def data_v1( request ):
         return_values = dump_param_handler.grab_all_v1()
         service_response = {'data': 'dump'}
     elif 'callnumber' in request.GET:
-        call_param_handler = views_helper.CallParamHandler()
-        return_values = call_param_handler.grab_callnumbers( request.GET['callnumber'].split() )
+        call_param_handler = views_helper.CallParamHandler( request.GET['callnumber'].split(',') )
+        return_values = call_param_handler.grab_callnumbers()
+        service_response['query'] = { 'request_type': 'call number', 'request_numbers': call_param_handler.callnumbers }
     service_response['result'] = {}
     service_response['result']['items'] = return_values
     service_response['result']['service_documentation'] = settings_app.DOCS_URL
@@ -71,13 +72,11 @@ def data_v1( request ):
 #     if request.GET.get( 'data', '' ) == 'dump':
 #         return_values = dump_param_handler.grab_all_v1()
 #         service_response = {'data': 'dump'}
-
 #     elif 'callnumber' in request.GET:
 #         call_param_handler = views_helper.CallParamHandler()
 #         return_values = call_param_handler.grab_callnumbers( request.GET['callnumber'].split() )
 #     service_response['result'] = {}
 #     service_response['result']['items'] = return_values
-#     service_response['result']['service_documentation'] = 'coming soon'
-#     service_response['result']['service_contact'] = 'coming soon'
+#     service_response['result']['service_documentation'] = settings_app.DOCS_URL
 #     output = json.dumps( service_response, sort_keys=True, indent=2 )
 #     return HttpResponse( output, content_type='application/json')
