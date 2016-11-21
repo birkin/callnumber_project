@@ -48,9 +48,16 @@ def data_v2( request ):
             }
         return_values = dump_param_handler.grab_all_v2()
     elif 'callnumber' in request.GET:
+        resp = {
+            'query': {
+                'timestamp': unicode(datetime.datetime.now()),
+                'params': 'callnumber={}'.format(pprint.pformat(request.GET['callnumber'])) },
+            'response': {
+                'documentation': 'coming',
+                'items': [] }
+            }
         call_param_handler = views_helper.CallParamHandler()
         return_values = call_param_handler.grab_callnumbers( request.GET['callnumber'].split() )
-        service_response = { 'result': {} }
     resp['response']['items'] = return_values
     resp['response']['timestamp'] = unicode( datetime.datetime.now() )
     output = json.dumps( resp, sort_keys=True, indent=2 )
