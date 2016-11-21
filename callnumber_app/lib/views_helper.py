@@ -42,6 +42,8 @@ class CallParamHandler(object):
 
 
     def grab_callnumbers( self ):
+        """ Prepares list of callnumber dicts for submitted callnumbers.
+            Called by views.data_v1() and views.data_v2() """
         log.debug( 'self.callnumbers, ```{}```'.format(pprint.pformat(self.callnumbers)) )
         return_values = []
         self.resp_template['response']['perceived_callnumbers'] = self.callnumbers
