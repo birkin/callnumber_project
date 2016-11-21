@@ -27,3 +27,7 @@ class RootUrlTest( TestCase ):
         self.assertEqual(  '/info/', redirect_url )
 
     # end class RootUrlTest()
+
+
+## TODO:
+## - test views_helper.DumpParamHandler.prep_points()
