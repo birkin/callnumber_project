@@ -43,7 +43,6 @@ def data_v2( request ):
     elif 'callnumber' in request.GET:
         call_param_handler = views_helper.CallParamHandler()
         resp = call_param_handler.resp_template
-        call_param_handler = views_helper.CallParamHandler()
         callnumbers = request.GET['callnumber'].split(',')
         callnumbers.sort()
         resp['response']['perceived_callnumbers'] = callnumbers
