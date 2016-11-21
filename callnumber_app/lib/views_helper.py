@@ -39,6 +39,8 @@ class CallParamHandler(object):
             }
         self.callnumbers = sorted( callnumbers )
 
+
+
     def grab_callnumbers( self ):
         log.debug( 'self.callnumbers, ```{}```'.format(pprint.pformat(self.callnumbers)) )
         return_values = []
@@ -56,6 +58,26 @@ class CallParamHandler(object):
             return_dct['brown_disciplines'] = assigned_subjects
             return_values.append(return_dct)
         return return_values
+
+
+
+    # def grab_callnumbers( self ):
+    #     log.debug( 'self.callnumbers, ```{}```'.format(pprint.pformat(self.callnumbers)) )
+    #     return_values = []
+    #     self.resp_template['response']['perceived_callnumbers'] = self.callnumbers
+    #     for call_number in self.callnumbers:
+    #         normalized_call_number = callnumber_normalizer.normalize( call_number )
+    #         log.debug( 'normalized_call_number, `{}`'.format(normalized_call_number) )
+    #         subjects = self.assign_subjects( normalized_call_number, self.load_subjects() )
+    #         return_dct = {}
+    #         return_dct['call_number'] = call_number
+    #         return_dct['normalized_call_number'] = normalized_call_number
+    #         assigned_subjects = []
+    #         for sub in subjects:
+    #             assigned_subjects.append(Subject.objects.get(slug=sub).name)
+    #         return_dct['brown_disciplines'] = assigned_subjects
+    #         return_values.append(return_dct)
+    #     return return_values
 
     def assign_subjects(self, callnumber, subject_groupings):
         try:
@@ -168,3 +190,6 @@ class DumpParamHandler(object):
                 stop = None
             return_points.append( {'start': start, 'stop': stop} )
         return return_points
+
+    ## end class DumpParamHandler()
+
