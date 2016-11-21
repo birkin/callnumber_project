@@ -38,29 +38,11 @@ def data_v2( request ):
     """ Handles all /v2/ urls. """
     if request.GET.get( 'data', '' ) == 'dump':
         dump_param_handler = views_helper.DumpParamHandler()
-        # resp = dump_param_handler.resp_template
-        resp = {
-            'query': {
-                'timestamp': unicode(datetime.datetime.now()),
-                'params': 'data=dump' },
-            'response': {
-                'documentation': 'coming',
-                'items': [],
-                'timestamp': None }
-            }
+        resp = dump_param_handler.resp_template
         return_values = dump_param_handler.grab_all_v2()
     elif 'callnumber' in request.GET:
-        resp = {
-            'query': {
-                'timestamp': unicode(datetime.datetime.now()),
-                'params': 'callnumber={}'.format(pprint.pformat(request.GET['callnumber'])) },
-            'response': {
-                'documentation': 'coming',
-                'items': [],
-                'perceived_callnumbers': [],
-                'timestamp': None
-                }
-            }
+        call_param_handler = views_helper.CallParamHandler()
+        resp = call_param_handler.resp_template
         call_param_handler = views_helper.CallParamHandler()
         callnumbers = request.GET['callnumber'].split(',')
         callnumbers.sort()

@@ -109,7 +109,15 @@ class DumpParamHandler(object):
         Called by views.data() """
 
     def __init__( self ):
-        pass
+        self.resp_template = {
+            'query': {
+                'timestamp': unicode(datetime.datetime.now()),
+                'params': 'data=dump' },
+            'response': {
+                'documentation': 'coming',
+                'items': [],
+                'timestamp': None }
+            }
 
     def grab_all_v2( self ):
         """ Prepares all callnumber info from db.
