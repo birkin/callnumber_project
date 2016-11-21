@@ -92,9 +92,31 @@ class DumpParamHandler(object):
     def __init__( self ):
         pass
 
-    def grab_all( self ):
+    def grab_all_v2( self ):
         """ Prepares all callnumber info from db.
-            Called by views.data() """
+            Called by views.data_v2() """
+        subjects = Subject.objects.all()
+        return_dct = {}
+        for sub in subjects:
+            item_dct = {
+                'name': sub.name,
+                'code_range': sub.code_range,
+                'points': []
+                }
+            for crange in sub.code_range.split(','):
+                points = crange.strip().split('-')
+                start = callnumber_normalizer.normalize( points[0] )
+                if len(points) == 2:
+                    stop = callnumber_normalizer.normalize( points[1].replace('.999', '.99') )
+                else:
+                    stop = None
+                item_dct['points'].append( {'start': start, 'stop': stop} )
+            return_dct[sub.slug] = item_dct
+        return return_dct
+
+    def grab_all_v1( self ):
+        """ Prepares all callnumber info from db.
+            Called by views.data_v1() """
         subjects = Subject.objects.all()
         return_dict = {}
         for sub in subjects:
