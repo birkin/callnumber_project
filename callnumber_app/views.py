@@ -44,9 +44,7 @@ def data_v2( request ):
         call_param_handler = views_helper.CallParamHandler( request.GET['callnumber'].split(',') )
         resp = call_param_handler.resp_template
         return_values = call_param_handler.grab_callnumbers()
-    resp['response']['items'] = return_values
-    resp['response']['timestamp'] = unicode( datetime.datetime.now() )
-    output = json.dumps( resp, sort_keys=True, indent=2 )
+    output = views_helper.prep_jsn( resp, return_values )
     return HttpResponse( output, content_type='application/json')
 
 
