@@ -15,7 +15,6 @@ from callnumber_app.lib import views_helper
 
 log = logging.getLogger(__name__)
 user_grabber = UserGrabber()
-dump_param_handler = views_helper.DumpParamHandler()
 
 
 def hi( request ):
@@ -38,13 +37,16 @@ def login( request ):
 def data_v2( request ):
     """ Handles all /v2/ urls. """
     if request.GET.get( 'data', '' ) == 'dump':
+        dump_param_handler = views_helper.DumpParamHandler()
+        # resp = dump_param_handler.resp_template
         resp = {
             'query': {
                 'timestamp': unicode(datetime.datetime.now()),
                 'params': 'data=dump' },
             'response': {
                 'documentation': 'coming',
-                'items': [] }
+                'items': [],
+                'timestamp': None }
             }
         return_values = dump_param_handler.grab_all_v2()
     elif 'callnumber' in request.GET:
@@ -54,10 +56,16 @@ def data_v2( request ):
                 'params': 'callnumber={}'.format(pprint.pformat(request.GET['callnumber'])) },
             'response': {
                 'documentation': 'coming',
-                'items': [] }
+                'items': [],
+                'perceived_callnumbers': [],
+                'timestamp': None
+                }
             }
         call_param_handler = views_helper.CallParamHandler()
-        return_values = call_param_handler.grab_callnumbers( request.GET['callnumber'].split() )
+        callnumbers = request.GET['callnumber'].split(',')
+        callnumbers.sort()
+        resp['response']['perceived_callnumbers'] = callnumbers
+        return_values = call_param_handler.grab_callnumbers( callnumbers )
     resp['response']['items'] = return_values
     resp['response']['timestamp'] = unicode( datetime.datetime.now() )
     output = json.dumps( resp, sort_keys=True, indent=2 )
@@ -66,6 +74,7 @@ def data_v2( request ):
 
 def data_v1( request ):
     """ Handles all /v1/ urls. """
+    dump_param_handler = views_helper.DumpParamHandler()
     service_response = {}
     if request.GET.get( 'data', '' ) == 'dump':
         return_values = dump_param_handler.grab_all_v1()

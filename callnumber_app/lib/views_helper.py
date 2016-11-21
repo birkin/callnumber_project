@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 """ Holds code supporting views.py """
 
-import logging
+import datetime, logging, pprint
 from callnumber_app.models import Subject
 from callnumber_app.lib import callnumber_normalizer
 
@@ -16,15 +16,26 @@ class CallParamHandler(object):
         Called by views.data() """
 
     def __init__( self ):
-        self.service_response = None
+        # self.service_response = None
+        self.resp_template = {
+            'query': {
+                'timestamp': unicode(datetime.datetime.now()),
+                'params': 'data=dump' },
+            'response': {
+                'documentation': 'coming',
+                'items': [],
+                'timestamp': None }
+            }
 
     def grab_callnumbers( self, callnumbers ):
-        self.service_response = {
-            'request_type': 'call number', 'request_numbers': callnumbers}
+        log.debug( 'callnumbers, ```{}```'.format(pprint.pformat(callnumbers)) )
+        # self.service_response = {
+        #     'request_type': 'call number', 'request_numbers': callnumbers}
         return_values = []
         for call_number in callnumbers:
             # normalized_call_number = normalize_call_number(call_number)
             normalized_call_number = callnumber_normalizer.normalize( call_number )
+            log.debug( 'normalized_call_number, `{}`'.format(normalized_call_number) )
             subjects = self.assign_subjects( normalized_call_number, self.load_subjects() )
             return_dict = {}
             return_dict['call_number'] = call_number
@@ -41,6 +52,8 @@ class CallParamHandler(object):
 
     def assign_subjects(self, callnumber, subject_groupings):
         try:
+            log.debug( 'callnumber, `{}`'.format(callnumber) )
+            log.debug( 'subject_groupings, `{}`'.format(pprint.pformat(subject_groupings)) )
             normalized_call_number = callnumber_normalizer.normalize(callnumber)
         except Exception as e:
             log.debug( 'could not normalize callnumber, `{}`'.format(callnumber) )
@@ -51,13 +64,19 @@ class CallParamHandler(object):
         subject_list = []
         #print subject_groupings
         for subject, start, end in subject_groupings:
-          end = end.replace('.999', '.99')
-          normalized_start = callnumber.normalize(start)
-          normalized_end = callnumber.normalize(end)
-          #Check to to see if the normalized call number is between start and end range
-          this_group = normalized_start <= normalized_call_number <= normalized_end
-          if this_group:
-            subject_list.append(subject)
+            end = end.replace('.999', '.99')
+
+            # normalized_start = callnumber.normalize(start)
+            normalized_start = callnumber_normalizer.normalize( start )
+
+            # normalized_end = callnumber.normalize(end)
+            normalized_end = callnumber_normalizer.normalize( end )
+
+
+            #Check to to see if the normalized call number is between start and end range
+            this_group = normalized_start <= normalized_call_number <= normalized_end
+            if this_group:
+                subject_list.append(subject)
         return subject_list
 
     def load_subjects( self ):
