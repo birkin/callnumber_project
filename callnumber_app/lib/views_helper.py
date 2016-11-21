@@ -132,11 +132,7 @@ class DumpParamHandler(object):
         subjects = Subject.objects.all()
         return_dct = {}
         for sub in subjects:
-            item_dct = {
-                'name': sub.name,
-                'code_range': sub.code_range,
-                'points': []
-                }
+            item_dct = { 'name': sub.name, 'code_range': sub.code_range, 'points': [] }
             for crange in sub.code_range.split(','):
                 points = crange.strip().split('-')
                 start = callnumber_normalizer.normalize( points[0] )
@@ -154,17 +150,45 @@ class DumpParamHandler(object):
         subjects = Subject.objects.all()
         return_dict = {}
         for sub in subjects:
-            return_dict[sub.id] = {}
-            return_dict[sub.id]['name'] = sub.name
-            return_dict[sub.id]['code_range'] = sub.code_range
-            return_dict[sub.id]['slug'] = sub.slug
-            return_dict[sub.id]['points'] = []
-            for crange in sub.code_range.split(','):
-                points = crange.strip().split('-')
-                start = callnumber_normalizer.normalize( points[0] )
-                if len(points) == 2:
-                    stop = callnumber_normalizer.normalize( points[1].replace('.999', '.99') )
-                else:
-                    stop = None
-                return_dict[sub.id]['points'].append( {'start': start, 'stop': stop} )
+            return_dict[sub.id] = {
+                'name': sub.name,
+                'code_range': sub.code_range,
+                'slug': sub.slug,
+                'points': [] }
+            return_dict[sub.id]['points'] = self.prep_points( sub )
         return return_dict
+
+    def prep_points( self, sub ):
+        """ Converts code_range to list of points.
+            Called by grab_all_v1() """
+        return_points = []
+        for crange in sub.code_range.split(','):
+            points = crange.strip().split('-')
+            start = callnumber_normalizer.normalize( points[0] )
+            if len(points) == 2:
+                stop = callnumber_normalizer.normalize( points[1].replace('.999', '.99') )
+            else:
+                stop = None
+            return_points.append( {'start': start, 'stop': stop} )
+        return return_points
+
+    # def grab_all_v1( self ):
+    #     """ Prepares all callnumber info from db.
+    #         Called by views.data_v1() """
+    #     subjects = Subject.objects.all()
+    #     return_dict = {}
+    #     for sub in subjects:
+    #         return_dict[sub.id] = {}
+    #         return_dict[sub.id]['name'] = sub.name
+    #         return_dict[sub.id]['code_range'] = sub.code_range
+    #         return_dict[sub.id]['slug'] = sub.slug
+    #         return_dict[sub.id]['points'] = []
+    #         for crange in sub.code_range.split(','):
+    #             points = crange.strip().split('-')
+    #             start = callnumber_normalizer.normalize( points[0] )
+    #             if len(points) == 2:
+    #                 stop = callnumber_normalizer.normalize( points[1].replace('.999', '.99') )
+    #             else:
+    #                 stop = None
+    #             return_dict[sub.id]['points'].append( {'start': start, 'stop': stop} )
+    #     return return_dict
