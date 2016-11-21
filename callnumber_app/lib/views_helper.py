@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 """ Holds code supporting views.py """
 
 import datetime, json, logging, pprint
+from callnumber_app import settings_app
 from callnumber_app.models import Subject
 from callnumber_app.lib import callnumber_normalizer
 
@@ -31,7 +32,7 @@ class CallParamHandler(object):
                 'timestamp': unicode(datetime.datetime.now()),
                 'params': 'callnumbers={}'.format( ','.join(callnumbers) ) },
             'response': {
-                'documentation': 'coming',
+                'documentation': settings_app.DOCS_URL,
                 'items': [],
                 'perceived_callnumbers': [],
                 'timestamp': None }
@@ -120,7 +121,7 @@ class DumpParamHandler(object):
                 'timestamp': unicode(datetime.datetime.now()),
                 'params': 'data=dump' },
             'response': {
-                'documentation': 'coming',
+                'documentation': settings_app.DOCS_URL,
                 'items': [],
                 'timestamp': None }
             }
