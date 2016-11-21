@@ -47,14 +47,14 @@ class CallParamHandler(object):
             normalized_call_number = callnumber_normalizer.normalize( call_number )
             log.debug( 'normalized_call_number, `{}`'.format(normalized_call_number) )
             subjects = self.assign_subjects( normalized_call_number, self.load_subjects() )
-            return_dict = {}
-            return_dict['call_number'] = call_number
-            return_dict['normalized_call_number'] = normalized_call_number
+            return_dct = {}
+            return_dct['call_number'] = call_number
+            return_dct['normalized_call_number'] = normalized_call_number
             assigned_subjects = []
             for sub in subjects:
                 assigned_subjects.append(Subject.objects.get(slug=sub).name)
-            return_dict['brown_disciplines'] = assigned_subjects
-            return_values.append(return_dict)
+            return_dct['brown_disciplines'] = assigned_subjects
+            return_values.append(return_dct)
         return return_values
 
     def assign_subjects(self, callnumber, subject_groupings):
@@ -144,7 +144,7 @@ class DumpParamHandler(object):
         """ Prepares all callnumber info from db.
             Called by views.data_v1() """
         subjects = Subject.objects.all()
-        return_dict = {}
+        return_dct = {}
         for sub in subjects:
             item_dct = {
                 'name': sub.name,
@@ -152,22 +152,8 @@ class DumpParamHandler(object):
                 'slug': sub.slug,
                 'points': [] }
             item_dct['points'] = self.prep_points( sub )
-            return_dict[sub.id] = item_dct
-        return return_dict
-
-    # def grab_all_v1( self ):
-    #     """ Prepares all callnumber info from db.
-    #         Called by views.data_v1() """
-    #     subjects = Subject.objects.all()
-    #     return_dict = {}
-    #     for sub in subjects:
-    #         return_dict[sub.id] = {
-    #             'name': sub.name,
-    #             'code_range': sub.code_range,
-    #             'slug': sub.slug,
-    #             'points': [] }
-    #         return_dict[sub.id]['points'] = self.prep_points( sub )
-    #     return return_dict
+            return_dct[sub.id] = item_dct
+        return return_dct
 
     def prep_points( self, sub ):
         """ Converts code_range to list of points.
