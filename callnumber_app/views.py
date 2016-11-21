@@ -35,7 +35,7 @@ def login( request ):
     return HttpResponseRedirect( url )  ## TODO: add shib logout (via redirecting to shib-logout url, then redirecting to the above admin url)
 
 
-def data( request ):
+def data_v1( request ):
     """ Handles all /v1/ urls. """
     service_response = {}
     if request.GET.get( 'data', '' ) == 'dump':
