@@ -34,25 +34,6 @@ def login( request ):
     return HttpResponseRedirect( url )  ## TODO: add shib logout (via redirecting to shib-logout url, then redirecting to the above admin url)
 
 
-# def data_v2( request ):
-#     """ Handles all /v2/ urls. """
-#     if request.GET.get( 'data', '' ) == 'dump':
-#         dump_param_handler = views_helper.DumpParamHandler()
-#         resp = dump_param_handler.resp_template
-#         return_values = dump_param_handler.grab_all_v2()
-#     elif 'callnumber' in request.GET:
-#         call_param_handler = views_helper.CallParamHandler()
-#         resp = call_param_handler.resp_template
-#         callnumbers = request.GET['callnumber'].split(',')
-#         callnumbers.sort()
-#         resp['response']['perceived_callnumbers'] = callnumbers
-#         return_values = call_param_handler.grab_callnumbers( callnumbers )
-#     resp['response']['items'] = return_values
-#     resp['response']['timestamp'] = unicode( datetime.datetime.now() )
-#     output = json.dumps( resp, sort_keys=True, indent=2 )
-#     return HttpResponse( output, content_type='application/json')
-
-
 def data_v2( request ):
     """ Handles all /v2/ urls. """
     if request.GET.get( 'data', '' ) == 'dump':
@@ -86,42 +67,3 @@ def data_v1( request ):
     service_response['result']['service_contact'] = 'coming soon'
     output = json.dumps( service_response, sort_keys=True, indent=2 )
     return HttpResponse( output, content_type='application/json')
-
-
-
-# def data( request ):
-#     params = request.GET
-#     service_request = params['data']
-#     return_values = []
-#     if service_request == 'dump':
-#         service_response = {'data': 'dump'}
-#         all = Subject.objects.all()
-#         return_dict = {}
-#         for sub in all:
-#             return_dict[sub.id] = {}
-#             return_dict[sub.id]['name'] = sub.name
-#             return_dict[sub.id]['code_range'] = sub.code_range
-#             return_dict[sub.id]['slug'] = sub.slug
-#             return_dict[sub.id]['points'] = []
-#             for crange in sub.code_range.split(','):
-#                 points = crange.strip().split('-')
-#                 # start = normalize_call_number(points[0])
-#                 start = callnumber_normalizer.normalize( points[0] )
-#                 if len(points) == 2:
-#                     # stop = normalize_call_number(points[1].replace('.999', '.99'))
-#                     stop = callnumber_normalizer.normalize( points[1].replace('.999', '.99') )
-#                 else:
-#                     stop = None
-#                 return_dict[sub.id]['points'].append({
-#                                                       'start': start,
-#                                                       'stop': stop})
-#         return_values = return_dict
-#     else:
-#         return HttpResponse('error')
-
-#     service_response['result'] = {}
-#     service_response['result']['items'] = return_values
-#     service_response['result']['service_documentation'] = 'coming soon'
-#     service_response['result']['service_contact'] = 'coming soon'
-#     output = json.dumps( service_response, sort_keys=True, indent=2 )
-#     return HttpResponse( output, content_type='application/json')
