@@ -1,6 +1,6 @@
 #### overview
 
-This is a [django](https://www.djangoproject.com) applicaton that allows staff, via an admin interface, to create customizable categories and associate [Library Of Congress call-number](https://en.wikipedia.org/wiki/Library_of_Congress_Classification) ranges to those categories.
+This is a [django](https://www.djangoproject.com) application that allows staff, via an admin interface, to create customizable categories and associate [Library Of Congress call-number](https://en.wikipedia.org/wiki/Library_of_Congress_Classification) ranges to those categories.
 
 It supports the [Brown Library's](https://library.brown.edu) [NewTitles](https://library.brown.edu/titles/) application, and offers the ability to normalize callnumbers.
 
@@ -15,7 +15,7 @@ It supports the [Brown Library's](https://library.brown.edu) [NewTitles](https:/
 - The existing categories are listed alphabetically, along with a display of callnumber ranges associated with each category.
 
 - To edit an entry, click the category name, and you'll then be able to edit the callnumber ranges.
-    - Each callnumber range should be separted by a comma, for example: `GF125-GF125.999, HT101-HT395.999` (for `Cities`)
+    - Each callnumber range should be separated by a comma, for example: `GF125-GF125.999, HT101-HT395.999` (for `Cities`)
     - Note: when entering callnumber ranges, be sure not to forget the alphabetic prefix before the end of the callnumber range. An _incorrect_ example: `GF125-125.999, HT101-395.999` -- the first range is missing the `GF` before the end-range; the second is missing the `HT` before the end-range.
 
 ---
