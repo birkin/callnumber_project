@@ -1,4 +1,4 @@
-##### overview
+#### overview
 
 This is a [django](https://www.djangoproject.com) applicaton that allows staff, via an admin interface, to create customizable categories and associate [Library Of Congress call-number](https://en.wikipedia.org/wiki/Library_of_Congress_Classification) ranges to those categories.
 
@@ -7,7 +7,7 @@ It supports the [Brown Library's](https://library.brown.edu) [NewTitles](https:/
 ---
 
 
-##### staff usage
+#### staff usage
 
 - Start at https://apps.library.brown.edu/login/
     - You'll be prompted for your Shibboleth login, and, if you're authorized, you'll end up at an admin screen.
@@ -21,7 +21,7 @@ It supports the [Brown Library's](https://library.brown.edu) [NewTitles](https:/
 ---
 
 
-##### api usage
+#### api usage
 
 - data dump...
     - v1 (deprecated): https://apps.library.brown.edu/callnumber/v1/?data=dump
@@ -38,7 +38,7 @@ It supports the [Brown Library's](https://library.brown.edu) [NewTitles](https:/
 ---
 
 
-##### credits
+#### credits
 
 - The original non-public version of this was written by [Ted Lawless](https://github.com/lawlesst).
 
@@ -47,7 +47,7 @@ It supports the [Brown Library's](https://library.brown.edu) [NewTitles](https:/
 ---
 
 
-##### code contact
+#### code contact
 
 [Birkin James Diana](https://github.com/birkin)
 
