@@ -143,7 +143,7 @@ class DumpParamHandler(object):
         self.resp_template = {
             'query': {
                 'timestamp': unicode(datetime.datetime.now()),
-                'params': 'data=dump' },
+                'paramsZ': 'data=dump' },
             'response': {
                 'documentation': settings_app.DOCS_URL,
                 'items': [],
