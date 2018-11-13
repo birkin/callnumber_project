@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
 """ Holds code supporting views.py """
 
 import datetime, json, logging, pprint
@@ -142,7 +141,7 @@ class DumpParamHandler(object):
     def __init__( self ):
         self.resp_template = {
             'query': {
-                'timestamp': unicode(datetime.datetime.now()),
+                'timestamp': str( datetime.datetime.now() ),
                 'paramsZ': 'data=dump' },
             'response': {
                 'documentation': settings_app.DOCS_URL,
