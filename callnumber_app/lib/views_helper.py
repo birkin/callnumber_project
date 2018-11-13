@@ -15,7 +15,7 @@ def prep_jsn( resp, return_values ):
     """ Preps json response from resp dct.
         Called by views.data_v2() """
     resp['response']['items'] = return_values
-    resp['response']['timestamp'] = unicode( datetime.datetime.now() )
+    resp['response']['timestamp'] = str( datetime.datetime.now() )
     output = json.dumps( resp, sort_keys=True, indent=2 )
     return output
 
@@ -28,7 +28,7 @@ class CallParamHandler(object):
         log.debug( 'callnumbers, ```{}```'.format(pprint.pformat(callnumbers)) )
         self.resp_template = {
             'query': {
-                'timestamp': unicode(datetime.datetime.now()),
+                'timestamp': str(datetime.datetime.now()),
                 'params': 'callnumbers={}'.format( ','.join(callnumbers) ) },
             'response': {
                 'documentation': settings_app.DOCS_URL,
@@ -142,7 +142,7 @@ class DumpParamHandler(object):
         self.resp_template = {
             'query': {
                 'timestamp': str( datetime.datetime.now() ),
-                'paramsZ': 'data=dump' },
+                'params': 'data=dump' },
             'response': {
                 'documentation': settings_app.DOCS_URL,
                 'items': [],
