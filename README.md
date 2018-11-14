@@ -9,7 +9,7 @@ It supports the [Brown Library's](https://library.brown.edu) [NewTitles](https:/
 
 #### staff usage
 
-- Start at https://apps.library.brown.edu/login/
+- Start at https://apps.library.brown.edu/callnumber/login/
     - You'll be prompted for your Shibboleth login, and, if you're authorized, you'll end up at an admin screen.
 
 - The existing categories are listed alphabetically, along with a display of callnumber ranges associated with each category.
@@ -32,7 +32,6 @@ It supports the [Brown Library's](https://library.brown.edu) [NewTitles](https:/
     - Spaces in callnumbers should be handled fine
     - Example:
         - v1 (deprecated): https://apps.library.brown.edu/callnumber/v1/?callnumber=TP1085,PJ%201001
-
         - v2: https://apps.library.brown.edu/callnumber/v2/?callnumber=TP1085,PJ%201001
 
 ---
