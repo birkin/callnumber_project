@@ -16,10 +16,16 @@ log = logging.getLogger(__name__)
 user_grabber = UserGrabber()
 
 
-def hi( request ):
+# def hi( request ):
+#     """ Returns simplest response. """
+#     now = datetime.datetime.now()
+#     return HttpResponse( '<p>hi</p> <p>( %s )</p>' % now )
+
+
+def info( request ):
     """ Returns simplest response. """
     now = datetime.datetime.now()
-    return HttpResponse( '<p>hi</p> <p>( %s )</p>' % now )
+    return HttpResponse( '<p>info</p> <p>( %s )</p>' % now )
 
 
 def login( request ):
