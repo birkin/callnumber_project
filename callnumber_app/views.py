@@ -80,7 +80,7 @@ def data_v1( request ):
         call_param_handler = views_helper.CallParamHandler( request.GET['callnumber'].split(',') )
         return_values = call_param_handler.grab_callnumbers()
         service_response['query'] = { 'request_type': 'call number', 'request_numbers': call_param_handler.callnumbers }
-    service_response['result'] = { 'items': return_values, 'service_documentation': settings_app.DOCS_URL }
+    service_response['result'] = { 'items': return_values, 'service_documentation': settings_app.README_URL }
     output = json.dumps( service_response, sort_keys=True, indent=2 )
     return HttpResponse( output, content_type='application/json')
 

@@ -31,7 +31,7 @@ class CallParamHandler(object):
                 'timestamp': str(datetime.datetime.now()),
                 'params': 'callnumbers={}'.format( ','.join(callnumbers) ) },
             'response': {
-                'documentation': settings_app.DOCS_URL,
+                'documentation': settings_app.README_URL,
                 'items': [],
                 'perceived_callnumbers': [],
                 'timestamp': None }
@@ -144,7 +144,7 @@ class DumpParamHandler(object):
                 'timestamp': str( datetime.datetime.now() ),
                 'params': 'data=dump' },
             'response': {
-                'documentation': settings_app.DOCS_URL,
+                'documentation': settings_app.README_URL,
                 'items': [],
                 'timestamp': None }
             }
