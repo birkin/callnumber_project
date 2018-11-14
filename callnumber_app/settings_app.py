@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 import json, os
 
 
-DOCS_URL = os.environ['CLLNMBR__DOCS_URL']
+README_URL = os.environ['CLLNMBR__DOCS_URL']
 
 LEGIT_USER = os.environ['CLLNMBR__LEGIT_USER']
 LEGIT_USER_PASSWORD = os.environ['CLLNMBR__LEGIT_USER_PASSWORD']

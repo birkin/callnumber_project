@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 import datetime, json, logging, os, pprint
 from callnumber_app import settings_app
+from callnumber_app.lib import view_info_helper
 from callnumber_app.lib import views_helper
 from callnumber_app.lib.login_helper import UserGrabber
 from django.contrib.auth import login as django_login
@@ -16,16 +17,18 @@ log = logging.getLogger(__name__)
 user_grabber = UserGrabber()
 
 
-# def hi( request ):
-#     """ Returns simplest response. """
-#     now = datetime.datetime.now()
-#     return HttpResponse( '<p>hi</p> <p>( %s )</p>' % now )
-
-
 def info( request ):
-    """ Returns simplest response. """
-    now = datetime.datetime.now()
-    return HttpResponse( '<p>info</p> <p>( %s )</p>' % now )
+    """ Returns basic data including branch & commit. """
+    # log.debug( 'request.__dict__, ```%s```' % pprint.pformat(request.__dict__) )
+    rq_now = datetime.datetime.now()
+    commit = view_info_helper.get_commit()
+    branch = view_info_helper.get_branch()
+    info_txt = commit.replace( 'commit', branch )
+    resp_now = datetime.datetime.now()
+    taken = resp_now - rq_now
+    context_dct = view_info_helper.make_context( request, rq_now, info_txt, taken )
+    output = json.dumps( context_dct, sort_keys=True, indent=2 )
+    return HttpResponse( output, content_type='application/json; charset=utf-8' )
 
 
 def login( request ):
