@@ -18,7 +18,7 @@ urlpatterns = [
 
     url( r'^v2/', views.data_v2, name='data_v2_url' ),
 
-    url( r'^admin/login/', RedirectView.as_view(pattern_name='login_url') ),
+   url( r'^admin/login/', RedirectView.as_view(pattern_name='login_url') ),
 
     url( r'^admin/', admin.site.urls ),
 

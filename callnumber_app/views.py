@@ -7,6 +7,7 @@ from callnumber_app import settings_app
 from callnumber_app.lib import view_info_helper
 from callnumber_app.lib import views_helper
 from callnumber_app.lib.login_helper import UserGrabber
+from callnumber_app.lib.shib_auth import shib_login  # decorator
 from django.contrib.auth import login as django_login
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
@@ -31,15 +32,28 @@ def info( request ):
     return HttpResponse( output, content_type='application/json; charset=utf-8' )
 
 
+@shib_login
 def login( request ):
-    log.debug( 'starting login()' )
-    user = user_grabber.get_user( request.META )
-    if user:
-        log.debug( 'logging in user' )
-        django_login(request, user )
-    url = reverse('admin:callnumber_app_subject_changelist' )
-    log.debug( 'redirect url to admin, ```{}```'.format(url) )
-    return HttpResponseRedirect( url )  ## TODO: add shib logout (via redirecting to shib-logout url, then redirecting to the above admin url)
+    """ Handles authNZ, & redirects to admin.
+        Called by click on login or admin link. """
+    next_url = request.GET.get( 'next', None )
+    if not next_url:
+        redirect_url = reverse( settings_app.POST_LOGIN_ADMIN_REVERSE_URL )
+    else:
+        redirect_url = request.GET['next']  # will often be same page
+    log.debug( 'login redirect url, ```%s```' % redirect_url )
+    return HttpResponseRedirect( redirect_url )
+
+
+# def login( request ):
+#     log.debug( 'starting login()' )
+#     user = user_grabber.get_user( request.META )
+#     if user:
+#         log.debug( 'logging in user' )
+#         django_login(request, user )
+#     url = reverse('admin:callnumber_app_subject_changelist' )
+#     log.debug( 'redirect url to admin, ```{}```'.format(url) )
+#     return HttpResponseRedirect( url )  ## TODO: add shib logout (via redirecting to shib-logout url, then redirecting to the above admin url)
 
 
 def data_v2( request ):
