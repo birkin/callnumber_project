@@ -95,16 +95,20 @@ class CallParamHandler(object):
         #print subject_groupings
         for subject, start, end in subject_groupings:
             end = end.replace('.999', '.99')
+            # log.debug( 'end, `%s`' % end )
 
-            # normalized_start = callnumber.normalize(start)
             normalized_start = callnumber_normalizer.normalize( start )
+            # log.debug( 'normalized_start, `%s`' % normalized_start )
 
-            # normalized_end = callnumber.normalize(end)
             normalized_end = callnumber_normalizer.normalize( end )
+            # log.debug( 'normalized_end, `%s`' % normalized_end )
 
-
-            #Check to to see if the normalized call number is between start and end range
-            this_group = normalized_start <= normalized_call_number <= normalized_end
+            ## Check to to see if the normalized call number is between start and end range
+            if normalized_start and normalized_end:
+                this_group = normalized_start <= normalized_call_number <= normalized_end
+            else:
+                this_group = False
+            # log.debug( 'this_group, ```%s```' % this_group )
             if this_group:
                 subject_list.append(subject)
         return subject_list
