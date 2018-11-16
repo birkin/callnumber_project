@@ -1,3 +1,6 @@
+[![code-best-practices image](https://library.brown.edu/good_code/project_image/callnumber-app/)](https://library.brown.edu/good_code/project_info/callnumber-app/)
+
+
 #### overview
 
 This is a [django](https://www.djangoproject.com) application that allows staff, via an admin interface, to create customizable categories and associate [Library Of Congress call-number](https://en.wikipedia.org/wiki/Library_of_Congress_Classification) ranges to those categories.
