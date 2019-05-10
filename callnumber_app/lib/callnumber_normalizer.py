@@ -1,4 +1,12 @@
-import re
+"""
+2019-May-10 -- incorporates modernizations from <https://github.com/diyclassics/library-callnumber-lc/blob/master/callnumber/__init__.py>
+"""
+
+import logging, re
+
+
+log = logging.getLogger(__name__)
+
 
 __version__ = '0.1.0'
 
@@ -14,50 +22,43 @@ lccn_re = re.compile(r'''^
         (?:DVD-ROM)? # DVDs, obviously
         (?:CD-ROM)?  # CDs
         (?:TAPE-C)?  # Tapes
-        (?:1-SIZE)? #Brown specific
+        (?:1-SIZE)?    # Brown specific
         (?:3-SIZE)?
         (?:RIVER)?
         (?:BOX)?
         (?:2-SIZE)?
-        (?:SMALL BOX)? #end Brown specific
+        (?:SMALL BOX)?  # end Brown specific
         \s*
-        ([A-Z]{1,3})  # alpha
+        ([A-Z]{1,3})    # alpha
         \s*
-        (?:         # optional numbers with optional decimal point
+        (?:             # optional numbers with optional decimal point
           (\d+)
           (?:\s*?\.\s*?(\d+))?
         )?
         \s*
-        (?:               # optional cutter
+        (?:             # optional cutter
           \.? \s*
-          ([A-Z])      # cutter letter
+          ([A-Z])       # cutter letter
           \s*
-          (\d+ | \Z)        # cutter numbers
+          (\d+ | \Z)    # cutter numbers
         )?
         \s*
-        (?:               # optional cutter
+        (?:             # optional cutter
           \.? \s*
-          ([A-Z])      # cutter letter
+          ([A-Z])       # cutter letter
           \s*
-          (\d+ | \Z)        # cutter numbers
+          (\d+ | \Z)    # cutter numbers
         )?
         \s*
-        (?:               # optional cutter
+        (?:             # optional cutter
           \.? \s*
-          ([A-Z])      # cutter letter
+          ([A-Z])       # cutter letter
           \s*
-          (\d+ | \Z)        # cutter numbers
+          (\d+ | \Z)    # cutter numbers
         )?
-        (\s+.+?)?        # everthing else
+        (\s+.+?)?       # everthing else
         \s*$
         ''', re.VERBOSE)
-
-def check_value(value, space):
-  """Replacement for the if else logic not available in Python 2.4"""
-  if value:
-    return value
-  else:
-    return space
 
 
 def normalize(lc, bottom=False):
@@ -75,7 +76,7 @@ def normalize(lc, bottom=False):
     (alpha, num, dec, c1alpha, c1num,
      c2alpha, c2num, c3alpha, c3num, extra) = origs
 
-    if (len(dec) > 2):
+    if (len(dec) > 3):  # was ```if (len(dec) > 2):```
         return None
 
     if alpha and not (num or dec or c1alpha or c1num or c2alpha \
@@ -87,23 +88,20 @@ def normalize(lc, bottom=False):
         return alpha
 
     enorm = re.sub(r'[^A-Z0-9]', '', extra)
-    num = '%04d' % int(num)
+
+    log.debug( 'num, `%s`' % num )
+    if num is not '':  # was raising Exception on callnumber 'BB .S7333 1777 5'
+        num = '%04d' % int(num)  # converts, eg, '2' into '0002'
 
     topnorm = [
         alpha + topspace * (3 - len(alpha)),
         num + topdigit * (4 - len(num)),
-        dec + topdigit * (2 - len(dec)),
-        #c1alpha if c1alpha else topspace,
-        #(topspace, c1alpha)[c1alpha],
-        check_value(c1alpha, topspace),
+        dec + topdigit * (3 - len(dec)),
+        c1alpha if c1alpha else topspace,
         c1num + topdigit * (3 - len(c1num)),
-        #c2alpha if c2alpha else topspace,
-        #(topspace, c2alpha)[c2alpha],
-        check_value(c2alpha, topspace),
+        c2alpha if c2alpha else topspace,
         c2num + topdigit * (3 - len(c2num)),
-        #c3alpha if c3alpha else topspace,
-        #(topspace, c3alpha)[c3alpha],
-        check_value(c3alpha, topspace),
+        c3alpha if c3alpha else topspace,
         c3num + topdigit * (3 - len(c3num)),
         ' ' + enorm,
     ]
@@ -111,18 +109,12 @@ def normalize(lc, bottom=False):
     bottomnorm = [
         alpha + bottomspace * (3 - len(alpha)),
         num + bottomdigit * (4 - len(num)),
-        dec + bottomdigit * (2 - len(dec)),
-        #c1alpha if c1alpha else bottomspace,
-        #(bottomspace, c1alpha)[c1alpha],
-        check_value(c1alpha, bottomspace),
+        dec + bottomdigit * (3 - len(dec)),
+        c1alpha if c1alpha else bottomspace,
         c1num + bottomdigit * (3 - len(c1num)),
-        #c2alpha if c2alpha else bottomspace,
-        #(bottomspace, c2alpha)[c2alpha],
-        check_value(c2alpha, bottomspace),
+        c2alpha if c2alpha else bottomspace,
         c2num + bottomdigit * (3 - len(c2num)),
-        #c3alpha if c3alpha else bottomspace,
-        #(bottomspace, c3alpha)[c3alpha],
-        check_value(c3alpha, bottomspace),
+        c3alpha if c3alpha else bottomspace,
         c3num + bottomdigit * (3 - len(c3num)),
         ' ' + enorm,
     ]
@@ -149,7 +141,9 @@ class LC(object):
         try:
             self.denormalized = callno.upper()
         except AttributeError:
-            print( "*** ERROR: '%s' not a string?" % (callno) )
+            message = '*** ERROR: ```%s``` not a string?' % (callno)
+            log.warning( message )
+            print( message )
         self.normalized = normalize(callno)
 
     def __unicode__(self):
