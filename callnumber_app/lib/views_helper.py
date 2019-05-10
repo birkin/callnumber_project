@@ -52,7 +52,6 @@ class CallParamHandler(object):
         self.resp_template = {
             'query': {
                 'timestamp': str( start_timestamp ),
-                # 'params': 'callnumbers={}'.format( ','.join(callnumbers) ) },
                 'url': request_url },
             'response': {
                 'documentation': settings_app.README_URL,
@@ -144,15 +143,15 @@ class DumpParamHandler(object):
     """ Handles request.GET['data'] = 'dump'
         Called by views.data() """
 
-    def __init__( self ):
+    def __init__( self, start_timestamp, request_url ):
         self.resp_template = {
             'query': {
-                'timestamp': str( datetime.datetime.now() ),
-                'params': 'data=dump' },
+                'timestamp': str( start_timestamp ),
+                'url': request_url },
             'response': {
                 'documentation': settings_app.README_URL,
                 'items': [],
-                'timestamp': None }
+                'elapsed_time': None }
             }
 
     def grab_all_v2( self ):

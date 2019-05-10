@@ -60,10 +60,9 @@ def login( request ):
 
 def data_v2( request ):
     """ Handles all /v2/ urls. """
-    rq_now = datetime.datetime.now()
-    rq_url = common.make_request_url( request )
+    ( rq_now, rq_url ) = ( datetime.datetime.now(), common.make_request_url(request) )  # initializer
     if request.GET.get( 'data', '' ) == 'dump':
-        dump_param_handler = views_helper.DumpParamHandler()
+        dump_param_handler = views_helper.DumpParamHandler( rq_now, rq_url )
         resp = dump_param_handler.resp_template
         return_values = dump_param_handler.grab_all_v2()
     elif 'callnumber' in request.GET:
@@ -76,7 +75,8 @@ def data_v2( request ):
 
 def data_v1( request ):
     """ Handles all /v1/ urls. """
-    ( dump_param_handler, service_response, rq_now, rq_url ) = ( views_helper.DumpParamHandler(), {}, datetime.datetime.now(), common.make_request_url(request) )  # initialization
+    ( service_response, rq_now, rq_url ) = ( {}, datetime.datetime.now(), common.make_request_url(request) )  # initialization
+    dump_param_handler = views_helper.DumpParamHandler( rq_now, rq_url )
     if request.GET.get( 'data', '' ) == 'dump':
         return_values = dump_param_handler.grab_all_v1()
         service_response = {'data': 'dump'}
