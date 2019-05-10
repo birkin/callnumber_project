@@ -20,14 +20,13 @@ class ClientTest( TestCase ):
         self.assertTrue( '"normalized_call_number": "TP 1085"' in content )
         self.assertTrue( '"normalized_call_number": "PJ 1001"' in content )
 
-    def test_callnumber_response(self):
-        """ Checks two submitted callnumbers. """
-        response = self.client.get( '/v2/', { 'callnumber': 'TP1085,PJ 1001'} )
+    def test_problematic_callnumber_response(self):
+        """ Checks callnumber request that generated an error. """
+        response = self.client.get( '/v2/', { 'callnumber': 'BB .S7333 1777 5'} )
         log.debug( 'response.__dict__, ```%s```' % pprint.pformat(response.__dict__) )
         self.assertEqual( 200, response.status_code )
         content = response.content.decode('utf-8')
-        self.assertTrue( '"normalized_call_number": "TP 1085"' in content )
-        self.assertTrue( '"normalized_call_number": "PJ 1001"' in content )
+        self.assertTrue( 'foo' in content )
 
     ## end class ClientTest()
 
