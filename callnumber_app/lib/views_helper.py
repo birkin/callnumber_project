@@ -11,11 +11,20 @@ from callnumber_app.lib import callnumber_normalizer
 log = logging.getLogger(__name__)
 
 
-def prep_jsn( resp, return_values ):
+# def prep_jsn( resp, return_values ):
+#     """ Preps json response from resp dct.
+#         Called by views.data_v2() """
+#     resp['response']['items'] = return_values
+#     resp['response']['timestamp'] = str( datetime.datetime.now() )
+#     output = json.dumps( resp, sort_keys=True, indent=2 )
+#     return output
+
+def prep_jsn( resp, return_values, start_timestamp ):
     """ Preps json response from resp dct.
         Called by views.data_v2() """
+    log.debug( 'resp, ```%s```' % pprint.pformat(resp) )
     resp['response']['items'] = return_values
-    resp['response']['timestamp'] = str( datetime.datetime.now() )
+    resp['response']['elapsed_time'] = str( datetime.datetime.now() - start_timestamp )
     output = json.dumps( resp, sort_keys=True, indent=2 )
     return output
 
@@ -24,21 +33,33 @@ class CallParamHandler(object):
     """ Handles request.GET['data'] = 'callnumber'
         Called by views.data() """
 
-    def __init__( self, callnumbers ):
+    # def __init__( self, callnumbers ):
+    #     log.debug( 'callnumbers, ```{}```'.format(pprint.pformat(callnumbers)) )
+    #     self.resp_template = {
+    #         'query': {
+    #             'timestamp': str(datetime.datetime.now()),
+    #             'params': 'callnumbers={}'.format( ','.join(callnumbers) ) },
+    #         'response': {
+    #             'documentation': settings_app.README_URL,
+    #             'items': [],
+    #             'perceived_callnumbers': [],
+    #             'timestamp': None }
+    #         }
+    #     self.callnumbers = sorted( callnumbers )
+
+    def __init__( self, callnumbers, start_timestamp ):
         log.debug( 'callnumbers, ```{}```'.format(pprint.pformat(callnumbers)) )
         self.resp_template = {
             'query': {
-                'timestamp': str(datetime.datetime.now()),
+                'timestamp': str( start_timestamp ),
                 'params': 'callnumbers={}'.format( ','.join(callnumbers) ) },
             'response': {
                 'documentation': settings_app.README_URL,
                 'items': [],
                 'perceived_callnumbers': [],
-                'timestamp': None }
+                'elapsed_time': None }
             }
         self.callnumbers = sorted( callnumbers )
-
-
 
     def grab_callnumbers( self ):
         """ Prepares list of callnumber dicts for submitted callnumbers.
@@ -59,26 +80,6 @@ class CallParamHandler(object):
             return_dct['brown_disciplines'] = assigned_subjects
             return_values.append(return_dct)
         return return_values
-
-
-
-    # def grab_callnumbers( self ):
-    #     log.debug( 'self.callnumbers, ```{}```'.format(pprint.pformat(self.callnumbers)) )
-    #     return_values = []
-    #     self.resp_template['response']['perceived_callnumbers'] = self.callnumbers
-    #     for call_number in self.callnumbers:
-    #         normalized_call_number = callnumber_normalizer.normalize( call_number )
-    #         log.debug( 'normalized_call_number, `{}`'.format(normalized_call_number) )
-    #         subjects = self.assign_subjects( normalized_call_number, self.load_subjects() )
-    #         return_dct = {}
-    #         return_dct['call_number'] = call_number
-    #         return_dct['normalized_call_number'] = normalized_call_number
-    #         assigned_subjects = []
-    #         for sub in subjects:
-    #             assigned_subjects.append(Subject.objects.get(slug=sub).name)
-    #         return_dct['brown_disciplines'] = assigned_subjects
-    #         return_values.append(return_dct)
-    #     return return_values
 
     def assign_subjects(self, callnumber, subject_groupings):
         try:

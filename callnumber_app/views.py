@@ -43,28 +43,32 @@ def login( request ):
     return HttpResponseRedirect( redirect_url )
 
 
-# def login( request ):
-#     log.debug( 'starting login()' )
-#     user = user_grabber.get_user( request.META )
-#     if user:
-#         log.debug( 'logging in user' )
-#         django_login(request, user )
-#     url = reverse('admin:callnumber_app_subject_changelist' )
-#     log.debug( 'redirect url to admin, ```{}```'.format(url) )
-#     return HttpResponseRedirect( url )  ## TODO: add shib logout (via redirecting to shib-logout url, then redirecting to the above admin url)
+# def data_v2( request ):
+#     """ Handles all /v2/ urls. """
+#     if request.GET.get( 'data', '' ) == 'dump':
+#         dump_param_handler = views_helper.DumpParamHandler()
+#         resp = dump_param_handler.resp_template
+#         return_values = dump_param_handler.grab_all_v2()
+#     elif 'callnumber' in request.GET:
+#         call_param_handler = views_helper.CallParamHandler( request.GET['callnumber'].split(',') )
+#         resp = call_param_handler.resp_template
+#         return_values = call_param_handler.grab_callnumbers()
+#     output = views_helper.prep_jsn( resp, return_values )
+#     return HttpResponse( output, content_type='application/json')
 
 
 def data_v2( request ):
     """ Handles all /v2/ urls. """
+    rq_now = datetime.datetime.now()
     if request.GET.get( 'data', '' ) == 'dump':
         dump_param_handler = views_helper.DumpParamHandler()
         resp = dump_param_handler.resp_template
         return_values = dump_param_handler.grab_all_v2()
     elif 'callnumber' in request.GET:
-        call_param_handler = views_helper.CallParamHandler( request.GET['callnumber'].split(',') )
+        call_param_handler = views_helper.CallParamHandler( request.GET['callnumber'].split(','), rq_now )
         resp = call_param_handler.resp_template
         return_values = call_param_handler.grab_callnumbers()
-    output = views_helper.prep_jsn( resp, return_values )
+    output = views_helper.prep_jsn( resp, return_values, rq_now )
     return HttpResponse( output, content_type='application/json')
 
 
