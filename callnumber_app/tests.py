@@ -26,7 +26,7 @@ class ClientTest( TestCase ):
         log.debug( 'response.__dict__, ```%s```' % pprint.pformat(response.__dict__) )
         self.assertEqual( 200, response.status_code )
         content = response.content.decode('utf-8')
-        self.assertTrue( 'foo' in content )
+        self.assertTrue( '"normalized_call_number": "BB 0000000S7333 000 000 17775"' in content )
 
     ## end class ClientTest()
 
