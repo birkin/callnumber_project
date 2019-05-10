@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
 import logging, pprint
 from callnumber_app import settings_app
 # from callnumber_app.lib.shib import ShibChecker
