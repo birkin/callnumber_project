@@ -47,12 +47,13 @@ class CallParamHandler(object):
     #         }
     #     self.callnumbers = sorted( callnumbers )
 
-    def __init__( self, callnumbers, start_timestamp ):
+    def __init__( self, callnumbers, start_timestamp, request_url ):
         log.debug( 'callnumbers, ```{}```'.format(pprint.pformat(callnumbers)) )
         self.resp_template = {
             'query': {
                 'timestamp': str( start_timestamp ),
-                'params': 'callnumbers={}'.format( ','.join(callnumbers) ) },
+                # 'params': 'callnumbers={}'.format( ','.join(callnumbers) ) },
+                'url': request_url },
             'response': {
                 'documentation': settings_app.README_URL,
                 'items': [],

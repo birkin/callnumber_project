@@ -2,6 +2,7 @@
 
 import datetime, json, logging, os, pprint
 from callnumber_app import settings_app
+from callnumber_app.lib import common
 from callnumber_app.lib import view_info_helper
 from callnumber_app.lib import views_helper
 from callnumber_app.lib.login_helper import UserGrabber
@@ -60,12 +61,13 @@ def login( request ):
 def data_v2( request ):
     """ Handles all /v2/ urls. """
     rq_now = datetime.datetime.now()
+    rq_url = common.make_request_url( request )
     if request.GET.get( 'data', '' ) == 'dump':
         dump_param_handler = views_helper.DumpParamHandler()
         resp = dump_param_handler.resp_template
         return_values = dump_param_handler.grab_all_v2()
     elif 'callnumber' in request.GET:
-        call_param_handler = views_helper.CallParamHandler( request.GET['callnumber'].split(','), rq_now )
+        call_param_handler = views_helper.CallParamHandler( request.GET['callnumber'].split(','), rq_now, rq_url )
         resp = call_param_handler.resp_template
         return_values = call_param_handler.grab_callnumbers()
     output = views_helper.prep_jsn( resp, return_values, rq_now )
@@ -74,12 +76,12 @@ def data_v2( request ):
 
 def data_v1( request ):
     """ Handles all /v1/ urls. """
-    ( dump_param_handler, service_response ) = ( views_helper.DumpParamHandler(), {} )  # initialization
+    ( dump_param_handler, service_response, rq_now, rq_url ) = ( views_helper.DumpParamHandler(), {}, datetime.datetime.now(), common.make_request_url(request) )  # initialization
     if request.GET.get( 'data', '' ) == 'dump':
         return_values = dump_param_handler.grab_all_v1()
         service_response = {'data': 'dump'}
     elif 'callnumber' in request.GET:
-        call_param_handler = views_helper.CallParamHandler( request.GET['callnumber'].split(',') )
+        call_param_handler = views_helper.CallParamHandler( request.GET['callnumber'].split(','), rq_now, rq_url )
         return_values = call_param_handler.grab_callnumbers()
         service_response['query'] = { 'request_type': 'call number', 'request_numbers': call_param_handler.callnumbers }
     service_response['result'] = { 'items': return_values, 'service_documentation': settings_app.README_URL }
